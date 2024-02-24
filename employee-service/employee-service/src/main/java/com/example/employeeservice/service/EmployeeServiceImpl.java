@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -20,8 +21,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private ModelMapper modelMapper;
 
+//    @Autowired
+//    private RestTemplate restTemplate;
+
+//    @Autowired
+//    private WebClient webClient;
+
+
     @Autowired
-    private RestTemplate restTemplate;
+    private APIClient apiClient;
 
 
     @Override
@@ -42,9 +50,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee employee = employeeRepository.findById(employeeId).get();
 
-        ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity("http://localhost:8081/api/departments/" + employee.getDepartmentCode(), DepartmentDto.class);
+//        ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity("http://localhost:8081/api/departments/" + employee.getDepartmentCode(), DepartmentDto.class);
+//
+//        DepartmentDto departmentDto = responseEntity.getBody();
 
-        DepartmentDto departmentDto = responseEntity.getBody();
+
+//       DepartmentDto departmentDto =  webClient.get()
+//                .uri("http://localhost:8081/api/departments/"+employee.getDepartmentCode())
+//                .retrieve().bodyToMono(DepartmentDto.class)
+//                .block();
+//
+
+
+
+        DepartmentDto departmentDto = apiClient.getDepartment(employee.getDepartmentCode());
+
 
         EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
 
